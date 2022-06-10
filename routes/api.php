@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::namespace("API")->prefix('/v1')->group(function (){;
 
-
-
-
-
+    //Public
+    Route::namespace("Auth")->prefix('auth')->group(function (){
+        Route::post('register', [AuthenticationController::class, 'register']);
+        Route::post('login', [AuthenticationController::class, 'login']);
+    });
 
 });
