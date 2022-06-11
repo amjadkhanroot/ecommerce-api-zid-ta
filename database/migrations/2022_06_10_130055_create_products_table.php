@@ -23,7 +23,7 @@ return new class extends Migration
             $table->json('name');
             $table->json('description');
             $table->json('price');
-            $table->json('currency', 3);
+            $table->json('currency');
             $table->boolean('active')->default(true);
             $table->boolean('is_vat_included')->default(true);
             $table->foreignId('user_id')->constrained('users');

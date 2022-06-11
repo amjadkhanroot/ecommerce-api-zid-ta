@@ -38,11 +38,13 @@ class Product extends Model
         'currency'
     ];
 
+    protected $hidden = ['user_id', 'created_at', 'updated_at'];
+
     protected $casts = [
         'active' => 'boolean'
     ];
 
-    public function scopeMine($userId, $query)
+    public function scopeMine($query,$userId)
     {
         return $query->where('user_id', $userId);
     }
@@ -52,9 +54,9 @@ class Product extends Model
         return $query->where('active', true);
     }
 
-    public function scopeExistForUser($sku, $userId, $query): bool
+    public static function existForUser($sku, $userId): bool
     {
-        return $query->where([['sku', $sku], ['user_id', $userId]])->first() != null;
+        return Product::where([['sku', $sku], ['user_id', $userId]])->first() != null;
     }
 
     public static function uploadImage(Request $request, $product): void
@@ -69,20 +71,15 @@ class Product extends Model
             $fileName = $image->hashName();
             $path = storage_path('app/public/product_images/');
 
-            $thumbnail = Image::make($request->file('image'))->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $thumbnail = Image::make($request->file('image'))->resize(100, 100);
 
             $imageName = 'img_' . $fileName;
             $thumbnailName =  'thumb_' . $fileName;
             $image->move($path, $imageName);
-            $thumbnail->save($path , $thumbnailName);
+            $thumbnail->save($path . $thumbnailName, 80);
 
-            $validatedData['image'] =
-            $validatedData['thumbnail'] = $path.$thumbnailName;
-
-            $product->image = $path.$imageName;
-            $product->thumbnail = $path.$thumbnailName;
+            $product->image = 'product_images/'.$imageName;
+            $product->thumbnail = 'product_images/'.$thumbnailName;
             $product->save();
         }
     }
