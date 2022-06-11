@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StoreSettingSeed::class);
         $this->call(RoleSeed::class);
         $this->call(UserSeed::class);
+        $this->call(SellerDetailsSeed::class);
+        $this->call(ProdcutSeed::class);
     }
 }
