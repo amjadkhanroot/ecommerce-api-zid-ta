@@ -55,12 +55,6 @@ class AuthenticationController
 
         if (auth()->attempt($validateData)) {
             $user = User::where('email',$validateData['email'])->get()->first();
-
-            //todo: return seller details if seller.
-//            if ($user->role->code === RoleEnum::get('seller'))
-//                $user->sellerInfo = $this->sellerExtraFields($request);
-
-
             $user->api_token = $user->createToken('Personal Access Token', [])->plainTextToken;
             return $this->apiResponse( true, "success", $user);
         }
