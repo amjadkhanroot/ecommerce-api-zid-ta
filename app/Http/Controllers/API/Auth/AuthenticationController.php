@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Enums\RoleEnum;
 use App\Http\Traits\ApiResponseTrait;
+use App\Models\Role;
 use App\Models\SellerDetails;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,19 +23,22 @@ class AuthenticationController
             'role' => 'nullable|exists:roles,code'
         ]);
 
+        $userInfo = $request->except('store_info', 'role');
 
         $sellerInfo = [];
-        if ($validateData['role'] === RoleEnum::get('seller'))
+        if (isset($validateData['role']) && $validateData['role'] === RoleEnum::get('seller')){
             $sellerInfo = $this->sellerExtraFields($request);
+            $userInfo['role_id'] = Role::where('code', $validateData['role'])->first()->id;
+        }
 
-        $userInfo = $request->except('store_info');
         $userInfo['password'] = bcrypt($userInfo['password']);
         $user = User::create($userInfo);
 
-        if (isset($validateData['store_info'])){
-            $sellerInfo = $sellerInfo['store_info'];
+        if (count($sellerInfo) > 0){
+            $sellerInfo = $sellerInfo['store_info'][0];
             $sellerInfo['user_id'] = $user->id;
-            SellerDetails::create($sellerInfo);
+
+            $user->storeInfo = SellerDetails::create($sellerInfo);
         }
 
         $user->api_token = $user->createToken('Personal Access Token', [])->plainTextToken;
@@ -66,9 +70,9 @@ class AuthenticationController
     private function sellerExtraFields(Request $request): array{
         return $request->validate([
             'store_info' => 'required|array',
-            'store_info.*.email' => 'required|string|email:rfc,dns|max:255|unique:store_details',
-            'store_info.*.name' => 'required|string|min:2|max:255',
-            'store_info.*.shopping_cost' => 'required|numeric|min:0'
+            'store_info.0.email' => 'required|string|email:rfc,dns|max:255',
+            'store_info.0.name' => 'required|string|min:2|max:255',
+            'store_info.0.shopping_cost' => 'required|numeric|min:0'
         ]);
     }
 }
