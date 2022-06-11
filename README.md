@@ -13,6 +13,7 @@ The API contains:
 - run 'sail up -d'.
 - run 'sail composer install'.
 - run 'sail artisan key:generate'.
+- run 'sail artisan storage:link'.
 - run 'sail artisan migrate'.
 - run 'sail artisan db:seed'
 - go to api.php to discover the endpoints.
