@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('store_settings', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('key');
             $table->string('type');
             $table->string('value');

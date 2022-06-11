@@ -14,7 +14,7 @@ trait ApiResponseTrait
         ];
 
         if ($success === false) {
-            $responseStructure[] = ['errors' => $errors];
+            $responseStructure['errors'] = $errors;
         }
 
         return response()->json($responseStructure);

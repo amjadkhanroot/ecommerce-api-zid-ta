@@ -11,8 +11,13 @@ class SellerDetails extends Model
 
     protected $fillable = ['user_id','email','name','shopping_cost'];
 
+    public static function getMyProfile($userId)
+    {
+        return SellerDetails::where('user_id', $userId);
+    }
+
     public function scopeUpdateShoppingCost($query, $shoppingCost, $userId)
     {
-        return $query->where(['user_id', $userId])->update(['user_id' => $userId, 'shopping_cost' => $shoppingCost]);
+        return $query->where('user_id', $userId)->update(['user_id' => $userId, 'shopping_cost' => $shoppingCost]);
     }
 }

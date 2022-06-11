@@ -15,7 +15,7 @@ class StoreSettingController
 
     public function setStoreSetting(Request $request){
         $requestData = $request->validate([
-            'shopping_cost' => 'required|numeric'
+            'shopping_cost' => 'required|numeric|min:0'
         ]);
 
         SellerDetails::updateShoppingCost($requestData['shopping_cost'], auth()->id());
