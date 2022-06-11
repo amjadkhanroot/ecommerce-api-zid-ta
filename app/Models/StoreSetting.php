@@ -17,6 +17,6 @@ class StoreSetting extends Model
 
     public function scopeGetVat($query)
     {
-        return $query->where('key', 'VAT')->first();
+        return $query->where('key', 'VAT');
     }
 }
