@@ -16,6 +16,7 @@ class AuthenticationController
     {
 
         $validateData = $request->validate([
+            'username' => 'required|string|max:12|unique:users',
             'email' => 'required|string|email:rfc,dns|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'nullable|exists:roles,code'
